@@ -14,8 +14,6 @@ WORKDIR /app
 
 COPY --from=frontend-builder /app .
 
-COPY .env.docker .env.local
-
 EXPOSE 5173
 
 CMD ["npm", "run", "dev"]
