@@ -1,15 +1,27 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name: advcicd-service
-  labels:
-    app: advcicd
+  name: frontend-service
   namespace: advcicd
-spec: 
+spec:
   selector:
-    app: advcicd
+    app: frontend
   ports:
-    - protocol: TCP
-      port: 5500
-      targetPort: 5500
-  type: nodePort 
+  - protocol: TCP
+    port: 5173
+    targetPort: 5173
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+  namespace: advcicd
+spec:
+  selector:
+    app: backend
+  ports:
+  - protocol: TCP
+    port: 5500
+    targetPort: 5500
+  type: ClusterIP

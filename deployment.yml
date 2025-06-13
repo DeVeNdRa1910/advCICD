@@ -1,23 +1,41 @@
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: advcide-deployment
+  name: frontend-advcicd
   namespace: advcicd
-  labels:
-    app: advcicd
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: advcicd
+      app: frontend
   template:
     metadata:
       labels:
-        app: advcicd
+        app: frontend
     spec:
       containers:
-        - name: advcicd-container
-          image: devendracode1910/advcicd:latest
-          ports:
-          - containerPort: 5500
-
+      - name: frontend
+        image: devendracode1910/frontend-advcicd:latest
+        ports:
+        - containerPort: 5173
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-advcicd
+  namespace: advcicd
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: devendracode1910/backend-advcicd:latest
+        ports:
+        - containerPort: 3000
