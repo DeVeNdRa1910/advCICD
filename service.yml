@@ -1,0 +1,15 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: advcicd-service
+  labels:
+    app: advcicd
+  namespace: advcicd
+spec: 
+  selector:
+    app: advcicd
+  ports:
+    - protocol: TCP
+      port: 5500
+      targetPort: 5500
+  type: nodePort 
