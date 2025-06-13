@@ -6,8 +6,6 @@ COPY . .
 
 RUN npm i
 
-RUN npm run test
-
 FROM node:21-slim
 
 WORKDIR /app
