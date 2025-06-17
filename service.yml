@@ -22,6 +22,6 @@ spec:
     app: backend
   ports:
   - protocol: TCP
-    port: 5500
-    targetPort: 5500
+    port: 5000
+    targetPort: 5000
   type: NodePort
