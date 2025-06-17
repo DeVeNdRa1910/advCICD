@@ -160,10 +160,10 @@ pipeline{
         }
         failure {
             withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
-                    sh '''
-                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
-                    '''
+                    
                     sh '''  
+                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
+
                         export KUBECONFIG=$KUBECONFIG_FILE
                         cp $KUBECONFIG_FILE /tmp/kubeconfig-copy.yaml
                         chmod 600 /tmp/kubeconfig-copy.yaml
