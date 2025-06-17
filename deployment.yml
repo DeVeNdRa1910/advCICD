@@ -38,4 +38,4 @@ spec:
       - name: backend
         image: devendracode1910/backend-advcicd:latest
         ports:
-        - containerPort: 3000
+        - containerPort: 5500
