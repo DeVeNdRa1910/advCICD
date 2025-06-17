@@ -92,9 +92,9 @@ pipeline{
             steps {
                 sh '''
                     echo "Minikube status:"
-                    minikube status || echo "⚠️ Minikube not running!"
+                    minikube status || echo "Minikube not running!"
                     echo "Minikube IP:"
-                    minikube ip || echo "❌ Failed to get IP"
+                    minikube ip || echo "Failed to get IP"
                 '''
             }
         }
@@ -107,12 +107,7 @@ pipeline{
                         cp $KUBECONFIG_FILE /tmp/kubeconfig-copy.yaml
                         chmod 600 /tmp/kubeconfig-copy.yaml
                         export KUBECONFIG=/tmp/kubeconfig-copy.yaml
-        
-                        MINIKUBE_IP=$(minikube ip || echo "")
-                        if [ -z "$MINIKUBE_IP" ]; then
-                            echo "❌ Minikube is not running or not accessible!"
-                            exit 1
-                        fi
+
         
                         kubectl config set-cluster minikube --server=https://192.168.39.198:8443 --insecure-skip-tls-verify=true
                         
@@ -132,11 +127,6 @@ pipeline{
                         chmod 600 /tmp/kubeconfig-copy.yaml
                         export KUBECONFIG=/tmp/kubeconfig-copy.yaml
         
-                        MINIKUBE_IP=$(minikube ip || echo "")
-                        if [ -z "$MINIKUBE_IP" ]; then
-                            echo "❌ Minikube is not running or not accessible!"
-                            exit 1
-                        fi
         
                         kubectl config set-cluster minikube --server=https://192.168.39.198:8443 --insecure-skip-tls-verify=true
                         
@@ -160,20 +150,17 @@ pipeline{
         }
         failure {
             withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
+
+                    sh ''' 
+                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
+                    '''
                     
                     sh '''  
-                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
-
                         export KUBECONFIG=$KUBECONFIG_FILE
                         cp $KUBECONFIG_FILE /tmp/kubeconfig-copy.yaml
                         chmod 600 /tmp/kubeconfig-copy.yaml
                         export KUBECONFIG=/tmp/kubeconfig-copy.yaml
         
-                        MINIKUBE_IP=$(minikube ip || echo "")
-                        if [ -z "$MINIKUBE_IP" ]; then
-                            echo "❌ Minikube is not running or not accessible!"
-                            exit 1
-                        fi
         
                         kubectl set image deployment/frontend-deployment frontend-container=${DOCKER_HUB_USER}/frontend-advcicd:previous -n advcicd || true
                         kubectl set image deployment/backend-deployment backend-container=${DOCKER_HUB_USER}/backend-advcicd:previous -n advcicd || true
