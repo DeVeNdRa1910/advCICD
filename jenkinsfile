@@ -145,14 +145,19 @@ pipeline{
         }
         success {
             sh '''
-                curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build *SUCCESS* | Pipeline executes successfully"}' https://hooks.slack.com/services/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
+                curl -X POST -H 'Content-type: application/json' \
+                --data '{"text":"✅ Build *SUCCESS* | Pipeline executes successfully"}' \
+                https://hooks.slack.com/services/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
+
             '''
         }
         failure {
             withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
 
                     sh ''' 
-                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
+                        curl -X POST -H 'Content-type: application/json' \
+                        --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' \
+                        https://hooks.slack.com/services/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
                     '''
                     
                     sh '''  
