@@ -7,12 +7,12 @@ pipeline{
         SLACK_WEBHOOK="https://hooks.slack.com/services/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"
     }
     stages{
-        stage("Clone code from github"){
+        stage("Checkout"){
             steps{
                 git url: "https://github.com/DeVeNdRa1910/advCICD.git", branch: "main"
             }
         }
-        stage("Sonarqueb Quality Analysis"){
+        stage("Sonarqube Quality Analysis"){
             steps{
                 withSonarQubeEnv("Sonar"){
                     sh "$SONAR_HOME/bin/sonar-scanner -Dsonar.projectName=advcicd -Dsonar.projectKey=advcicd "
@@ -109,7 +109,7 @@ pipeline{
                         export KUBECONFIG=/tmp/kubeconfig-copy.yaml
 
         
-                        kubectl config set-cluster minikube --server=https://192.168.39.198:8443 --insecure-skip-tls-verify=true
+                        kubectl config set-cluster minikube --server=https://192.168.39.29:8443 --insecure-skip-tls-verify=true
                         
                         kubectl apply -f namespace.yml --validate=false
                         kubectl apply -f deployment.yml --validate=false
@@ -128,7 +128,7 @@ pipeline{
                         export KUBECONFIG=/tmp/kubeconfig-copy.yaml
         
         
-                        kubectl config set-cluster minikube --server=https://192.168.39.198:8443 --insecure-skip-tls-verify=true
+                        kubectl config set-cluster minikube --server=https://192.168.39.29:8443 --insecure-skip-tls-verify=true
                         
                         kubectl get pods -n advcicd
                         kubectl get svc -n advcicd
@@ -145,14 +145,14 @@ pipeline{
         }
         success {
             sh '''
-                curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build *SUCCESS* | Pipeline executes successfully"}' https://hooks.slack.com/services/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
+                curl -X POST -H 'Content-type: application/json' --data '{"text":"✅ Build *SUCCESS* | Pipeline executes successfully"}' https://hooks.slack.com/services/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
             '''
         }
         failure {
             withCredentials([file(credentialsId: 'minikube-kubeconfig', variable: 'KUBECONFIG_FILE')]) {
 
                     sh ''' 
-                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
+                        curl -X POST -H 'Content-type: application/json' --data '{"text":"❌ Build *FAILED* | Pipeline has been broken"}' https://hooks.slack.com/services/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
                     '''
                     
                     sh '''  
