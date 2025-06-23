@@ -7,6 +7,8 @@ import { PORT } from './config/utils.js';
 import authRouter from './routes/auth.js';
 import postsRouter from './routes/posts.js';
 import { connectToRedis } from './services/redis.js';
+import prometheusMiddleware from 'express-prometheus-middleware';
+
 const app = express();
 export const port = PORT || 5000;
 
@@ -15,6 +17,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(cookieParser());
 app.use(compression());
+app.use(prometheusMiddleware({
+  metricsPath: '/metrics',
+  collectDefaultMetrics: true,
+}));
 
 // Connect to database
 connectDB();
